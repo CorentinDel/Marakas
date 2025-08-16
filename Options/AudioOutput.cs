@@ -37,7 +37,6 @@ namespace Marakas.Options
         {
             if (_waveOutEvt != null)
             {
-                _waveOutEvt.DeviceNumber = _comboOutputDevices.SelectedIndex;
                 OnOutputChanged?.Invoke(this, new EntryIndexEventData(_comboOutputDevices.SelectedIndex, IsVirtual ? AudioEntry.VirtualOutput : AudioEntry.Output));
             }
         }

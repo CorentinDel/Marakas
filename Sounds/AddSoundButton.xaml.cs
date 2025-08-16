@@ -44,7 +44,7 @@ namespace Marakas.Sounds
                 try
                 {
                     File.Copy(sourceFile, destFile, overwrite: true);
-                    GlobalData.Instance.AddSound(new SoundData(Path.GetFileName(sourceFile), Path.GetFileName(sourceFile), 0.2f));
+                    GlobalData.Instance.AddSound(new SoundData(Path.GetFileName(sourceFile), Path.GetFileName(sourceFile), 0.2f, 0.2f));
                 }catch(IOException ex)
                 {
                     Debug.WriteLine(ex.ToString());

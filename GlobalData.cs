@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Marakas.Sounds;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -61,6 +62,22 @@ namespace Marakas
             Save();
         }
 
+        public void SetSoundData(string filename,  SoundData data)
+        {
+            SoundData? listItem = Sounds.Find((sound) => sound.fileName == filename);
+
+            if(listItem == null)
+            {
+                Debug.WriteLine("No sound found");
+                return;
+            }
+
+            listItem.name = data.name;
+            listItem.volumeVC = data.volumeVC;
+            listItem.volumeHP = data.volumeHP;
+            Save();
+        }
+
         public void SetEntryIndex(AudioEntry entry, int index)
         {
             switch (entry)
@@ -82,10 +99,11 @@ namespace Marakas
         public AudioEntry entry = _entry;
     }
 
-    public class SoundData(string _fileName, string _name, float _volume)
+    public class SoundData(string _fileName, string _name, float _volumeVC, float _volumeHP)
     {
         public string fileName = _fileName;
-        public float volume = _volume;
+        public float volumeVC = _volumeVC;
+        public float volumeHP = _volumeHP;
         public string name = _name;
     }
 

@@ -7,8 +7,28 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <WrapPanel Name="SoundsPanel" Margin="20 20 20 20" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Name="SoundOptPanel" Width="0" />
+        </Grid.ColumnDefinitions>
+        <WrapPanel Name="SoundsPanel" Margin="20 20 20 20" HorizontalAlignment="Center" Grid.Column="0">
             <local:AddSoundButton />
         </WrapPanel>
+        <ScrollViewer VerticalAlignment="Top" VerticalScrollBarVisibility="Auto" Grid.Column="1">
+            <StackPanel>
+                <TextBox Name="SoundNameTextBox" AcceptsReturn="False" TextWrapping="NoWrap" Margin="5 20 5 0" Text="Nom de la musique" Padding="5" FontWeight="Bold" TextChanged="SoundName_TextChanged"/>
+                <Label Content="Volume Output Virtuel" Target="{Binding ElementName=GainValueVC}" Margin="5 20 5 0" />
+                <DockPanel Margin="5 0 5 0">
+                    <TextBox Name="VolumeVCTextBox" PreviewTextInput="NumberValidationTextBox" Text="{Binding ElementName=GainValueVC, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40"/>
+                    <Slider Margin="0 0 20 0" Minimum="0" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1" Value="100" Name="GainValueVC" ValueChanged="VolumeVCSlider_ValueChanged"/>
+                </DockPanel>
+                <Label Content="Volume Output Casque" Target="{Binding ElementName=GainValueHP}" Margin="5 20 5 0" />
+                <DockPanel Margin="5 0 5 0">
+                    <TextBox Name="VolumeHPTextBox" PreviewTextInput="NumberValidationTextBox" Text="{Binding ElementName=GainValueHP, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40"/>
+                    <Slider Margin="0 0 20 0" Minimum="0" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1" Value="100" Name="GainValueHP" ValueChanged="VolumeHPSlider_ValueChanged"/>
+                </DockPanel>
+                <Button Click="SoundOption_CloseBtn" Margin="5 20 5 0" MaxWidth="80" Padding="5">Fermer</Button>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

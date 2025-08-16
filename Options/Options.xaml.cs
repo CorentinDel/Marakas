@@ -99,7 +99,7 @@ namespace Marakas.Tabs
 
         private void PathSoundsButton_OpenDialog(object sender, RoutedEventArgs e)
         {
-            OpenFolderDialog folderDialog = new OpenFolderDialog()
+            OpenFolderDialog folderDialog = new()
             {
                 Title = "Select Folder",
                 InitialDirectory = Directory.GetCurrentDirectory(),

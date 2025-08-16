@@ -59,6 +59,7 @@ namespace Marakas
 
         public void Start(bool earFeedback, int sampleRate = 44100, int channels = 1)
         {
+            Debug.WriteLine(earFeedback);
             _waveInEvt = new WaveInEvent
             {
                 DeviceNumber = _comboInputDevices.SelectedIndex,
@@ -81,15 +82,18 @@ namespace Marakas
 
         private void StartVRCableOut(int sampleRate = 44100, int channels = 1)
         {
-            _bufferWPVirtual = new BufferedWaveProvider(_waveInEvt?.WaveFormat);
-            ISampleProvider virtualVolSampleProvider = _bufferWPVirtual.ToSampleProvider();
-            _volumeVirtualProvider = new(virtualVolSampleProvider) { Volume = 1.0f };
-            _mixingVirtualProvider = new(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels))
+            if (_waveInEvt != null)
             {
-                ReadFully = true
-            };
-            _mixingVirtualProvider.AddMixerInput(_volumeVirtualProvider);
-            Audio.GetInstance().MixingVirtualProvider = _mixingVirtualProvider;
+                _bufferWPVirtual = new BufferedWaveProvider(_waveInEvt.WaveFormat);
+                ISampleProvider virtualVolSampleProvider = _bufferWPVirtual.ToSampleProvider();
+                _volumeVirtualProvider = new(virtualVolSampleProvider) { Volume = 1.0f };
+                _mixingVirtualProvider = new(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels))
+                {
+                    ReadFully = true
+                };
+                _mixingVirtualProvider.AddMixerInput(_volumeVirtualProvider);
+                Audio.GetInstance().MixingVirtualProvider = _mixingVirtualProvider;
+            }
         }
 
         public void StartEarFeedback(float feedbackVolume, int sampleRate = 44100, int channels = 1)
@@ -101,7 +105,7 @@ namespace Marakas
                 _volumeProvider = new(volSampleProvider) { Volume = feedbackVolume};
                 _mixingProvider = new(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels)) { ReadFully = true };
                 _mixingProvider.AddMixerInput(_volumeProvider);
-                Audio.GetInstance().MixingVirtualProvider = _mixingProvider;
+                Audio.GetInstance().MixingProvider = _mixingProvider;
             }
         }
 
