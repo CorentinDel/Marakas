@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Marakas.Sounds.SoundsButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Marakas"
+             mc:Ignorable="d" 
+             d:DesignHeight="90" d:DesignWidth="90">
+    <Border Background="#212121" BorderBrush="Silver" Margin="5 5 5 5" Width="80" Height="80" CornerRadius="8,8,8,8" BorderThickness="1">
+        <StackPanel Orientation="Vertical">
+            <Button Click="SoundBtn_PlaySound" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Height="60" Width="78">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" Height="60" Width="78">
+                    <Image Source="pack://application:,,,/Images/play.png" Width="40" Margin="0 10 0 0"/>
+                    <Image Source="pack://application:,,,/Images/stop.png" Width="50" Margin="0 5 0 0" Visibility="Collapsed"/>
+                </StackPanel>
+            </Button>
+            <Button Click="SoundBtn_Expand" Background="Transparent" Height="18" Width="78" BorderBrush="Silver" BorderThickness="0 1 0 0">
+                <TextBlock Name="SoundName" Foreground="White" MaxWidth="70" Width="Auto" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="Bold">Voici mon texte</TextBlock>
+            </Button> 
+        </StackPanel>
+    </Border>
+</UserControl>
