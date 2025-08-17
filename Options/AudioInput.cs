@@ -59,11 +59,12 @@ namespace Marakas
 
         public void Start(bool earFeedback, int sampleRate = 44100, int channels = 1)
         {
-            Debug.WriteLine(earFeedback);
             _waveInEvt = new WaveInEvent
             {
                 DeviceNumber = _comboInputDevices.SelectedIndex,
                 WaveFormat = new WaveFormat(sampleRate, channels),
+                BufferMilliseconds = 100,
+                NumberOfBuffers = 3
             };
 
             StartVRCableOut(sampleRate, channels);
@@ -84,7 +85,10 @@ namespace Marakas
         {
             if (_waveInEvt != null)
             {
-                _bufferWPVirtual = new BufferedWaveProvider(_waveInEvt.WaveFormat);
+                _bufferWPVirtual = new BufferedWaveProvider(_waveInEvt.WaveFormat)
+                {
+                    DiscardOnBufferOverflow = true
+                };
                 ISampleProvider virtualVolSampleProvider = _bufferWPVirtual.ToSampleProvider();
                 _volumeVirtualProvider = new(virtualVolSampleProvider) { Volume = 1.0f };
                 _mixingVirtualProvider = new(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels))
@@ -100,7 +104,10 @@ namespace Marakas
         {
             if (_waveInEvt != null)
             {
-                _bufferWP = new BufferedWaveProvider(_waveInEvt.WaveFormat);
+                _bufferWP = new BufferedWaveProvider(_waveInEvt.WaveFormat)
+                {
+                    DiscardOnBufferOverflow = true
+                };
                 ISampleProvider volSampleProvider = _bufferWP.ToSampleProvider();
                 _volumeProvider = new(volSampleProvider) { Volume = feedbackVolume};
                 _mixingProvider = new(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels)) { ReadFully = true };

@@ -49,6 +49,7 @@ namespace Marakas.Options
             _waveOutEvt = new WaveOutEvent
             {
                 DeviceNumber = _comboOutputDevices.SelectedIndex,
+                DesiredLatency = 100
             };
 
             _waveOutEvt.Init(provider);
