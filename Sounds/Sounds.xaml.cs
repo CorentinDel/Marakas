@@ -98,6 +98,12 @@ namespace Marakas.Tabs
             selectedSoundsBtn = null;
         }
 
+        private void AddButton_SoundAdded(object sender, RoutedEventArgs e)
+        {
+            ClearUISounds();
+            LoadSounds();
+        }
+
         private void ClearUISounds()
         {
             foreach(SoundsButton soundBtn in soundsBtnList)
@@ -106,6 +112,11 @@ namespace Marakas.Tabs
                 soundBtn.Dispose();
             }
             soundsBtnList.Clear();
+        }
+
+        private void SoundOption_StopSound(object sender, RoutedEventArgs e)
+        {
+            selectedSoundsBtn?.Stop();
         }
 
     }

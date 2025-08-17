@@ -23,6 +23,20 @@ namespace Marakas.Sounds
     /// </summary>
     public partial class AddSoundButton : UserControl
     {
+        public static readonly RoutedEvent OnSoundAddedEvent =
+        EventManager.RegisterRoutedEvent(
+            "OnSoundAdded",
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(AddSoundButton));
+
+        // 2) Wrapper CLR pour le XAML
+        public event RoutedEventHandler OnSoundAdded
+        {
+            add { AddHandler(OnSoundAddedEvent, value); }
+            remove { RemoveHandler(OnSoundAddedEvent, value); }
+        }
+
         public AddSoundButton()
         {
             InitializeComponent();
@@ -30,7 +44,7 @@ namespace Marakas.Sounds
 
         private void SoundBtn_AddSound(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog()
+            OpenFileDialog fileDialog = new()
             {
                 Filter = "Fichiers audio|*.mp3;*.wav",
                 Title = "Sélectionner un fichier audio"
@@ -45,6 +59,7 @@ namespace Marakas.Sounds
                 {
                     File.Copy(sourceFile, destFile, overwrite: true);
                     GlobalData.Instance.AddSound(new SoundData(Path.GetFileName(sourceFile), Path.GetFileName(sourceFile), 0.2f, 0.2f));
+                    RaiseEvent(new RoutedEventArgs(OnSoundAddedEvent, this));
                 }catch(IOException ex)
                 {
                     Debug.WriteLine(ex.ToString());

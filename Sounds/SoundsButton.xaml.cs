@@ -30,8 +30,9 @@ namespace Marakas.Sounds
         private string _name = "";
         private float _soundVolumeVC = 0.2f;
         private float _soundVolumeHP = 0.2f;
+        private bool _isPlaying = false;
 
-        private AudioFileReader? soundReader;
+        private AutoDisposeFileReader? soundReader;
         private AudioFileReader? soundVirtualReader;
         private VolumeSampleProvider? soundVolume;
         private VolumeSampleProvider? soundVirtualVolume;
@@ -92,13 +93,15 @@ namespace Marakas.Sounds
 
         private void SoundBtn_PlaySound(object sender, RoutedEventArgs e)
         {
+            if (_isPlaying) return;
+
             Audio audioInstance = Audio.GetInstance();
 
             audioInstance.currentSounds?.Dispose();
 
             // Casque 100%
-            soundReader = new AudioFileReader($@"{GlobalData.Instance.PathFolderSounds}/{_soundFileLocation}");
-            soundVolume = new VolumeSampleProvider(soundReader.ToSampleProvider()) { Volume = _soundVolumeHP };
+            soundReader = new AutoDisposeFileReader($@"{GlobalData.Instance.PathFolderSounds}/{_soundFileLocation}", OnSoundFinished);
+            soundVolume = new VolumeSampleProvider(soundReader) { Volume = _soundVolumeHP };
             soundProvider = new WdlResamplingSampleProvider(soundVolume.ToMono(), audioInstance.MixingProvider != null ? audioInstance.MixingProvider.WaveFormat.SampleRate : 44100);
             audioInstance.MixingProvider?.AddMixerInput(soundProvider);
 
@@ -108,9 +111,17 @@ namespace Marakas.Sounds
             soundVirtualProvider = new WdlResamplingSampleProvider(soundVirtualVolume.ToMono(), audioInstance.MixingVirtualProvider != null ? audioInstance.MixingVirtualProvider.WaveFormat.SampleRate : 44100);
             audioInstance.MixingVirtualProvider?.AddMixerInput(soundVirtualProvider);
 
+            _isPlaying = true;
+
             // Update UI
             // Change play image to stop image
-            return;
+            UpdateUI(true);
+        }
+
+        private void OnSoundFinished()
+        {
+            _isPlaying = false;
+            UpdateUI(false);
         }
 
         public void Stop()
@@ -136,8 +147,20 @@ namespace Marakas.Sounds
                 soundProvider = null;
             }
 
+            _isPlaying = false;
+
             // Update UI
             // Change Stop image to Play
+            UpdateUI(false);
+        }
+
+        private void UpdateUI(bool isPlaying)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                PlayIcon.Visibility = isPlaying ? Visibility.Collapsed : Visibility.Visible;
+                StopIcon.Visibility = isPlaying ? Visibility.Visible : Visibility.Collapsed;
+            });
         }
 
         public void Dispose()
